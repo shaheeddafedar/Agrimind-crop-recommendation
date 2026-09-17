@@ -12,7 +12,7 @@
     box-shadow: 0 4px 15px rgba(0,0,0,0.08);
 }
 section.main-content {
-    height: 1120px;
+    height: 1100px;
 }
 .main-content h2 {
     color: var(--primary-color);
@@ -61,6 +61,7 @@ section.main-content {
     display: flex;
     flex-direction: column;
     gap: 25px;
+    margin-top: -18px;
 }
 
 
@@ -87,7 +88,7 @@ section.main-content {
 .chatbot {
     display: flex;
     flex-direction: column;
-       height: 400px;        
+       height: 350px;        
     width: 300%;           
     max-width: 100%;  
 }
@@ -168,4 +169,33 @@ section.main-content {
     .form-grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* Recommendation mode buttons */
+.recommendation-mode {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 18px;
+}
+
+.recommendation-mode-btn {
+    width: 100%;
+    min-height: 50px;
+    cursor: pointer;
+    margin: 0;
+    margin-top: 10px;
+}
+
+.recommendation-mode-btn.active {
+    opacity: 1;
+}
+
+/* Slightly larger and lower submit button */
+#recommendation-submit-btn {
+    margin-top: 10px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    min-height: 50px;
 }

@@ -27,7 +27,7 @@
                 <% } else { %>
                     <li id="dashboard-link" style="display:none;"><a href="/dashboard"><%= __('nav_dashboard') %></a></li>
                 <% } %>
-
+                <li><a href="/irrigation">Irrigation</a></li>
                 <li><a href="/about"><%= __('nav_about') %></a></li>
                 <li><a href="/analytics"><%= __('nav_analytics') %></a></li>
             </ul>
@@ -41,7 +41,7 @@
             <div class="user-dropdown-menu">
                 <a href="/profile"><i class="fas fa-user-circle"></i> View Profile</a>
                 <a href="/dashboard"><i class="fas fa-seedling"></i> Dashboard</a>
-                <a href="/download-report"><i class="fas fa-file-pdf"></i> Download Report</a>
+                <!--<a href="/download-report"><i class="fas fa-file-pdf"></i> Download Report</a>-->
                 <form action="/logout" method="POST" style="margin: 0;">
                     <button type="submit" style="font-family: inherit;"><i class="fas fa-sign-out-alt"></i> Logout</button>
                 </form>
@@ -92,18 +92,47 @@
         </div>
     </section>
 
-    <!-- ✅ DEDICATED LIVE MARKET SECTION -->
-    <section class="market-section" style="background: #f4f7f4; padding: 30px 0;">
+    <!-- LIVE MARKET PRICES SECTION -->
+    <section class="market-section">
         <div class="container">
-            <div class="market-card" style="background: #ffffff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-width: 1200px; margin: 0 auto;">
-                <h3 style="margin-top: 0; border-bottom: 2px solid #2E8B57; padding-bottom: 10px; color: #2d3748; display: flex; align-items: center; gap: 10px;">
-                    <i class="fas fa-chart-line" style="color: #2E8B57;"></i> Live Belagavi Market Rates
-                </h3>
-                
-                <div id="market-prices-container" style="max-height: 250px; overflow-y: auto; margin-top: 15px;">
-                    <p style="text-align: center; color: #666;">Loading live rates...</p>
+
+            <div class="market-card">
+
+                <div class="market-header">
+
+                    <div>
+                        <h3>
+                            <i class="fas fa-chart-line"></i>
+                            Live Karnataka Market Prices
+                        </h3>
+
+                        <p id="market-date">
+                            Select a district to view the latest market prices
+                        </p>
+                    </div>
+
+                    <div class="district-selector">
+                        <label for="district-select">
+                            <i class="fas fa-map-marker-alt"></i>
+                            District
+                        </label>
+
+                        <select id="district-select">
+                            <option value="">Loading districts...</option>
+                        </select>
+                    </div>
+
                 </div>
+
+                <div id="market-prices-container">
+                    <p class="market-loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        Loading live market rates...
+                    </p>
+                </div>
+
             </div>
+
         </div>
     </section>
 

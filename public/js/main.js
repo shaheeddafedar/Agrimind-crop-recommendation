@@ -124,56 +124,184 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Function to fetch and display market prices
-    async function loadLiveMarketPrices() {
-        const container = document.getElementById('market-prices-container');
-        
-        // If the container doesn't exist on this page, stop running
-        if (!container) return;
+    async function loadKarnatakaDistricts() {
 
-        try {
-            // Call the API endpoint we created in Step 3
-            const response = await fetch('/api/market-prices');
-            
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            
-            const prices = await response.json();
-            
-            // If the database is empty, show a message
-            if (prices.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #666;">No live data available for Belagavi currently. Waiting for daily update.</p>';
-                return;
-            }
+    const districtSelect = document.getElementById('district-select');
 
-            // Clear the "Loading..." text
-            container.innerHTML = ''; 
-            
-            // Loop through each price and create a row for it
-            prices.forEach(item => {
-                const priceRow = document.createElement('div');
-                priceRow.style.cssText = 'display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0f0;';
-                
-                // Capitalize the crop name nicely
-                const cropName = item.commodity.charAt(0).toUpperCase() + item.commodity.slice(1);
-                
-                priceRow.innerHTML = `
-                    <strong style="color: #333; font-size: 14px;">${cropName}</strong>
-                    <span style="color: #2E8B57; font-weight: bold; font-size: 14px;">₹${item.modalPrice} / qtl</span>
-                `;
-                
-                container.appendChild(priceRow);
-            });
+    if (!districtSelect) return;
 
-        } catch (error) {
-            console.error('Error loading market prices:', error);
-            container.innerHTML = '<p style="color: red; text-align: center;">Could not load market data right now.</p>';
+    try {
+
+        const response = await fetch(
+            '/api/market-prices/districts'
+        );
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch districts');
         }
+
+        const data = await response.json();
+
+        districtSelect.innerHTML = '';
+
+        const districts = data.districts || [];
+
+        districts.forEach(district => {
+
+            const option = document.createElement('option');
+
+            option.value = district;
+            option.textContent = district;
+
+            districtSelect.appendChild(option);
+
+        });
+
+        // Default district
+        districtSelect.value = 'Belagavi';
+
+        // Load Belagavi initially
+        loadLiveMarketPrices('Belagavi');
+
+    } catch (error) {
+
+        console.error(
+            'Error loading Karnataka districts:',
+            error
+        );
+
+        districtSelect.innerHTML =
+            '<option>Unable to load districts</option>';
+
     }
 
-    // Run the function as soon as the page loads
-    document.addEventListener('DOMContentLoaded', () => {
-        loadLiveMarketPrices();
+}
+
+
+async function loadLiveMarketPrices(district = 'Belagavi') {
+
+    const container =
+        document.getElementById('market-prices-container');
+
+    const marketDate =
+        document.getElementById('market-date');
+
+    if (!container) return;
+
+    container.innerHTML = `
+        <p class="market-loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            Loading live market rates...
+        </p>
+    `;
+
+    try {
+
+        const response = await fetch(
+            `/api/market-prices?district=${encodeURIComponent(district)}`
+        );
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch market prices');
+        }
+
+        const data = await response.json();
+
+        const prices = data.prices || [];
+
+        if (marketDate && data.latestDate) {
+
+            marketDate.textContent =
+                `Latest available market data: ${data.latestDate}`;
+
+        }
+
+        if (prices.length === 0) {
+
+            container.innerHTML = `
+                <p class="market-empty">
+                    No market price data available for ${district}.
+                </p>
+            `;
+
+            return;
+
+        }
+
+        container.innerHTML = '';
+
+        prices.forEach(item => {
+
+            const cropName = item.commodity;
+
+            const card = document.createElement('div');
+
+            card.className = 'market-price-item';
+
+            card.innerHTML = `
+
+                <div class="market-crop">
+
+                    <span class="crop-icon">🌾</span>
+
+                    <span>${cropName}</span>
+
+                </div>
+
+                <div class="market-price">
+
+                    ₹${Number(item.modalPrice).toLocaleString('en-IN')}
+
+                    <small>Modal price per quintal</small>
+
+                </div>
+
+                <small style="display:block; margin-top:10px; color:#718096;">
+                    <i class="fas fa-store"></i>
+                    ${item.market}
+                </small>
+
+                <small style="display:block; margin-top:5px; color:#718096;">
+                    Variety: ${item.variety}
+                </small>
+
+            `;
+
+            container.appendChild(card);
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            'Error loading market prices:',
+            error
+        );
+
+        container.innerHTML = `
+            <p class="market-error">
+                Unable to load live market prices right now.
+            </p>
+        `;
+
+    }
+
+}
+    
+    loadKarnatakaDistricts();
+
+const districtSelect =
+    document.getElementById('district-select');
+
+if (districtSelect) {
+
+    districtSelect.addEventListener('change', () => {
+
+        loadLiveMarketPrices(
+            districtSelect.value
+        );
+
     });
+
+}
 });

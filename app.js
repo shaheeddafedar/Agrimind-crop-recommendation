@@ -13,11 +13,14 @@ const pageRouter = require('./routes/pageRouter');
 const apiRouter = require('./routes/apiRouter');
 const authRouter = require('./routes/auth'); 
 const errorController = require('./controllers/errorController');
+const fertilizerRoutes =
+    require("./routes/fertilizerRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = 'mongodb+srv://CROPAI:CROPAI123@cluster0.hengxfv.mongodb.net/?appName=Cluster0';
 
+app.use(express.json());
 app.use(cookieParser());
 
 i18n.configure({
@@ -80,6 +83,12 @@ app.use((req, res, next) => {
 
 app.use(pageRouter);
 app.use('/api', apiRouter);
+
+app.use(
+    "/api/fertilizer",
+    fertilizerRoutes
+);
+
 app.use(authRouter);
 
 app.use(errorController.get404);
@@ -96,16 +105,4 @@ mongoose.connect(MONGO_URI)
     });
 
     const cron = require('node-cron');
-// 1. Import your exact function name from the service file
-const { fetchAndCacheBelagaviPrices } = require('./services/apmcService'); 
 
-// 2. Force a fetch immediately when the server starts
-console.log('Fetching initial market data on startup...');
-fetchAndCacheBelagaviPrices();
-
-// 3. Schedule regular background updates
-// This cron expression ('0 * * * *') runs the fetch every hour on the hour. 
-cron.schedule('0 * * * *', async () => {
-    console.log('Running scheduled market data fetch...');
-    await fetchAndCacheBelagaviPrices(); 
-});

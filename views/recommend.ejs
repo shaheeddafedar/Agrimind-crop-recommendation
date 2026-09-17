@@ -16,6 +16,7 @@
     </header>
 
     <main class="container">
+        <div id="crop-result">
         <div class="result-header">
             <h2>Your AI-Powered Recommendation is Ready!</h2>
             <p>Based on your inputs, we recommend the following crop for optimal results.</p>
@@ -24,8 +25,24 @@
         <div class="result-grid">
             <div class="result-card recommended-crop">
                 <h3>Recommended Crop: <span id="crop-name"></span></h3>
-                <p class="reason"><i class="fas fa-lightbulb"></i> <strong>Reason:</strong> <span id="crop-reason"></span></p>
+                <div class="reason">
+                <h4>
+                    <i class="fas fa-lightbulb"></i>
+                    Why was this crop recommended?
+                </h4>
+
+                <ul id="crop-reasons"></ul>
             </div>
+            </div>
+
+           <div class="result-card large-card">
+    <h4>
+        <i class="fas fa-brain"></i>
+        AI Model Explanation
+    </h4>
+
+    <ul id="model-xai"></ul>
+</div>
 
             <div class="result-card">
                 <h4><i class="fas fa-chart-line"></i> Key Metrics (Estimated)</h4>
@@ -37,7 +54,13 @@
             </div>
 
             <div class="result-card large-card">
-                <h4><i class="fas fa-dollar-sign"></i> Financial Projections (per Hectare)</h4>
+                <h4><i class="fas fa-dollar-sign"></i> Financial Projections</h4>
+                <p class="estimate-note">
+                    <i class="fas fa-info-circle"></i>
+                    Approximate estimate based on the selected crop, farm area,
+                    estimated cultivation costs and latest available market price.
+                    Actual values may vary.
+                </p>
                 <div class="financials">
                     <p><strong>Gross Revenue:</strong> ₹<span id="gross-revenue"></span></p>
                     <p><strong>Investment:</strong> ₹<span id="investment"></span></p>
@@ -55,8 +78,68 @@
                 </div>
             </div>
         </div>
+</div>
 
-        <div class="actions">
+<!-- ==========================================
+     FERTILIZER RESULT
+     ========================================== -->
+
+<div id="fertilizer-result" style="display: none;">
+
+    <div class="result-header">
+        <h2>Your Fertilizer Recommendation is Ready!</h2>
+        <p>Based on your crop and soil nutrient values, here is your fertilizer recommendation.</p>
+    </div>
+
+    <div class="result-grid">
+
+        <div class="result-card recommended-crop">
+            <h3>
+                Crop: <span id="fertilizer-crop-name"></span>
+            </h3>
+
+            <div class="reason">
+                <h4>
+                    <i class="fas fa-flask"></i>
+                    Recommended Fertilizer
+                </h4>
+
+                <div id="fertilizer-recommendations"></div>
+            </div>
+        </div>
+
+        <div class="result-card">
+            <h4>
+                <i class="fas fa-seedling"></i>
+                Soil Status
+            </h4>
+
+            <ul id="fertilizer-soil-status"></ul>
+        </div>
+
+        <div class="result-card">
+            <h4>
+                <i class="fas fa-exclamation-circle"></i>
+                Nutrient Priority
+            </h4>
+
+            <ul id="fertilizer-priority"></ul>
+        </div>
+
+        <div class="result-card large-card">
+            <h4>
+                <i class="fas fa-brain"></i>
+                Why this recommendation?
+            </h4>
+
+            <ul id="fertilizer-xai"></ul>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="actions">
             <a href="/dashboard" class="btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
         </div>
     </main>

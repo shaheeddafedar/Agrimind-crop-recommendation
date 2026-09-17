@@ -22,6 +22,11 @@ router.get('/analytics', pageController.getAnalytics);
 router.get('/dashboard', isAuth, pageController.getDashboard);
 router.get('/feedback', isAuth, pageController.getFeedback);
 router.get('/recommend', isAuth, pageController.getRecommendationPage);
+router.get('/irrigation', isAuth, (req, res) => {
+    res.render('smart-irrigation', {
+        userId: req.session.user._id
+    });
+});
 
 router.get('/profile', isAuth, (req, res) => {
     userController.getProfile(req, res);

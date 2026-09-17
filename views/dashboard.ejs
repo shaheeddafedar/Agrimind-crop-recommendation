@@ -26,7 +26,7 @@
             <% } else { %>
                 <li id="dashboard-link" style="display:none;"><a href="/dashboard"><%= __('nav_dashboard') %></a></li>
             <% } %>
-
+                <li><a href="/irrigation">Irrigation</a></li>
             <li><a href="/about"><%= __('nav_about') %></a></li>
             <li><a href="/analytics"><%= __('nav_analytics') %></a></li>
         </ul>
@@ -40,7 +40,7 @@
                     <div class="user-dropdown-menu">
                         <a href="/profile"><i class="fas fa-user-circle"></i> View Profile</a>
                         <a href="/dashboard"><i class="fas fa-seedling"></i> Dashboard</a>
-                        <a href="/download-report"><i class="fas fa-file-pdf"></i> Download Report</a>
+                        <!--<a href="/download-report"><i class="fas fa-file-pdf"></i> Download Report</a>-->
                         <form action="/logout" method="POST" style="margin: 0;">
                             <button type="submit" style="font-family: inherit;"><i class="fas fa-sign-out-alt"></i> Logout</button>
                         </form>
@@ -68,8 +68,27 @@
     <main class="container">
         <div class="dashboard-grid">
             <section class="main-content">
-                <h2>Get a New Crop Recommendation</h2>
-                <p>Fill in the details below to get an AI-powered crop suggestion.</p>
+                <div class="recommendation-mode">
+                <button type="button"
+                        id="crop-mode-btn"
+                        class="btn recommendation-mode-btn active">
+                    🌾 Crop Recommendation
+                </button>
+
+                <button type="button"
+                        id="fertilizer-mode-btn"
+                        class="btn recommendation-mode-btn">
+                    🧪 Fertilizer Recommendation
+                </button>
+            </div>
+
+            <br>
+
+            <h2 id="recommendation-title">Get a New Crop Recommendation</h2>
+
+            <p id="recommendation-description">
+                Fill in the details below to get an AI-powered crop suggestion.
+            </p>
                 <div class="farm-id-fetch">
                 <div class="form-group">
                     <label for="farmId">Have a Farm Land ID? Fetch Details</label>
@@ -80,14 +99,24 @@
                 </div>
             </div>
                 <form id="recommendation-form" action="recommend" method="POST" class="form-grid">
-                    <div class="form-group">
+                    <div class="form-group crop-only-field">
                         <label for="soilPh">Soil pH (0-14)</label>
                         <input type="number" id="soilPh" step="0.1" min="0" max="14" required>
                     </div>
-                    <div class="form-group">
-                        <label for="moisture">Soil Moisture (%)</label>
-                        <input type="number" id="moisture" min="0" max="100" required>
-                    </div>
+                    <div class="form-group crop-only-field">
+                    <div class="form-group crop-only-field">
+                    <label for="humidity">Humidity (%)</label>
+                    <input
+                        type="number"
+                        id="humidity"
+                        min="0"
+                        max="100"
+                        step="0.01"
+                        required
+                        disabled
+                    >
+                </div>
+                </div>
                      <div class="form-group">
                         <label for="nitrogen">Nitrogen (kg/ha)</label>
                         <input type="number" id="nitrogen" min="0" required>
@@ -100,20 +129,28 @@
                         <label for="potassium">Potassium (0-200 kg/ha)</label>
                         <input type="number" id="potassium" min="0" max="200" required>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group crop-only-field">
                         <label for="temperature">Temperature (°C)</label>
-                        <input type="number" id="temperature"  min="1" max="75" required>
+                        <input type="number" id="temperature"  min="1" max="75" required disabled>
                     </div>
-                     <div class="form-group">
+                     <div class="form-group crop-only-field">
                         <label for="rainfall">Annual Rainfall (0-5000 mm)</label>
-                        <input type="number" id="rainfall" min="0" max="5000" required>
+                        <input type="number" id="rainfall" min="0" max="5000" required disabled>
                     </div>
-                    <div class="form-group">
-                        <label for="area">Area (hectares)</label>
+                    <div class="form-group crop-only-field">
+                    <label for="area">Area (hectares)</label>
                         <input type="number" id="area" step="0.1" min="0.1" required>
                     </div>
-                    <div class="form-group">
-                        <label for="season">Season</label>
+                    <div class="form-group crop-only-field">
+                        <label for="city">City</label>
+                        <select id="city" required disabled><option value="">Select City</option></select>
+                    </div>
+                    <div class="form-group crop-only-field">
+                        <label for="state">State</label>
+                        <select id="state" required><option value="">Select State</option></select>
+                    </div>
+                    <div class="form-group crop-only-field">
+                    <label for="season">Season</label>
                         <select id="season" required>
                             <option value="">Select Season</option>
                             <option value="Kharif">Kharif(Monsoon Season)</option>
@@ -121,26 +158,21 @@
                             <option value="Zaid">Zaid(Short Summer Season)</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="state">State</label>
-                        <select id="state" required><option value="">Select State</option></select>
-                    </div>
-                    <div class="form-group">
-                        <label for="city">City</label>
-                        <select id="city" required disabled><option value="">Select City</option></select>
-                    </div>
-                    <div class="form-group">
+                    
+                    <div class="form-group crop-only-field">
                         <label for="pastCrop">Past Crop Grown</label>
-                        <input type="text" id="pastCrop" placeholder="e.g., Wheat">
+                        <input type="text" id="pastCrop" placeholder="e.g., Wheat" not required>
                     </div>
-                    <div class="form-group full-width">
-                        <label for="leaf-image">Upload Leaf Image (Optional)</label>
-                        <input type="file" id="leaf-image" accept="image/*">
-                        <small>Simulated: This helps our AI detect potential diseases.</small>
+
+                    <div class="form-group fertilizer-only-field" id="fertilizer-crop-field">
+                        <label for="fertilizerCrop">Crop</label>
+                        <input type="text" id="fertilizerCrop" placeholder="e.g., Tomato">
                     </div>
 
                     <div class="form-group full-width">
-                        <button type="submit" class="btn">Get Crop Recommendation</button>
+                        <button type="submit" class="btn" id="recommendation-submit-btn">
+                            Get Crop Recommendation
+                        </button>
                     </div>
                 </form>
             </section>
@@ -153,7 +185,7 @@
                     </div>
                 </div>
                 <div class="sidebar-widget">
-                    <h3><i class="fas fa-comment-dots"></i> AI Chat Assistant</h3>
+                    <h3><i class="fas fa-comment-dots"></i> Chat Assistant</h3>
                     <div class="chatbot">
                         <div class="chat-window">
                             <div class="chat-message bot">Hello! How can I help you today?</div>
@@ -170,12 +202,11 @@
                 <li>Fertilizer for wheat</li>
                 <li>Best time to plant rice</li>
                 <li>What is soil pH?</li>
-                <li>what is kharif season</li>
-                <li>what is rabi season</li>
-                <li>common disease in cotton</li>
-                <li>what is soil ph</li>
-                <li>how to increase soil ph</li>
-                <li>how to decrease soil ph</li>
+                <li>What is kharif season</li>
+                <li>What is rabi season</li>
+                <li>What is soil ph</li>
+                <li>How to increase soil ph</li>
+                <li>How to decrease soil ph</li>
             </ul>
         </div>
             </aside>

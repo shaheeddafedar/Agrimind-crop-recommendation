@@ -34,6 +34,7 @@
 .recommended-crop #crop-name {
     font-weight: 700;
     border-bottom: 2px dotted var(--secondary-color);
+    text-transform: capitalize;
 }
 .recommended-crop .reason {
     margin-top: 15px;
@@ -88,4 +89,12 @@
         grid-template-columns: 1fr;
         grid-column: auto;
     }
+}
+
+.reason h4 {
+    color: white;
+}
+
+.reason h4 i {
+    color: yellow;
 }

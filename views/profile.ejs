@@ -35,7 +35,6 @@
                     <div class="user-dropdown-menu">
                         <a href="/profile"><i class="fas fa-user-circle"></i> View Profile</a>
                         <a href="/dashboard"><i class="fas fa-seedling"></i> Dashboard</a>
-                        <a href="/download-report"><i class="fas fa-file-pdf"></i> Download Report</a>
                         <form action="/logout" method="POST" style="margin: 0;">
                             <button type="submit" style="font-family: inherit;"><i class="fas fa-sign-out-alt"></i> Logout</button>
                         </form>
@@ -75,7 +74,7 @@
                     <button type="submit" class="btn btn-full">Update Profile</button>
                 </form>
                 
-                <a href="/download-report" class="btn-pdf"><i class="fas fa-file-pdf"></i> Download Report</a>
+                <!--<a href="/download-report" class="btn-pdf"><i class="fas fa-file-pdf"></i> Download Report</a>-->
             </div>
 
             <div class="profile-card" style="text-align: left;">
@@ -86,7 +85,9 @@
             <% recommendations.forEach(rec => { %>
                 <li class="history-item" style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
-                        <strong style="font-size: 1.1rem; color: #2E8B57;"><%= rec.recommendedCrop %></strong>
+                        <strong style="font-size: 1.1rem; color: #2E8B57;">
+                            <%= rec.recommendedCrop.charAt(0).toUpperCase() + rec.recommendedCrop.slice(1).toLowerCase() %>
+                        </strong>
                         <div style="font-size: 0.85rem; color: #666; margin-top: 5px;">
                             <span><i class="fas fa-flask"></i> pH: <%= rec.soilPh %></span> | 
                             <span><i class="fas fa-cloud-rain"></i> <%= rec.rainfall %>mm</span>

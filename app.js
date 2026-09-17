@@ -1,4 +1,7 @@
 require('dotenv').config();
+
+const dns = require('dns');
+dns.setServers(['8.8.8.8', '1.1.1.1']);
 const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
@@ -18,7 +21,7 @@ const fertilizerRoutes =
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const MONGO_URI = 'mongodb+srv://CROPAI:CROPAI123@cluster0.hengxfv.mongodb.net/?appName=Cluster0';
+const MONGO_URI = 'mongodb+srv://CROPAI:AICROP@database.lmlg9ez.mongodb.net/?appName=database';
 
 app.use(express.json());
 app.use(cookieParser());
